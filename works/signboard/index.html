@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>signboard</title>
+        <link rel="stylesheet" href="./index.css">
+    </head>
+
+    <body>
+        <h1>看板ボード</h1>
+        <div class="container">
+            <div class="board_input_wrapper">
+                <input id="add_input" type="text">
+                <button id="add_btn">追加</button>
+                <button id="delete_completed_btn">完了アイテムを削除</button>
+            </div>
+
+            <div class="board_wrapper">
+                <div class="board">
+                    <p class="board_title">未着手</p>
+                    <ul class="board_list" data-status="untouched">
+                    </ul>
+                </div>
+                <div class="board">
+                    <p class="board_title">作業中</p>
+                    <ul class="board_list" data-status="working">
+                    </ul>
+                </div>
+                <div class="board">
+                    <p class="board_title">完了</p>
+                    <ul class="board_list" data-status="completed">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script src="./index.js"></script>
+    </body>
+
+</html>
