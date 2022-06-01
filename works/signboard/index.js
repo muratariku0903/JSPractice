@@ -27,7 +27,8 @@ function initializeLocalStorage(storageName) {
 }
 
 function addBoardListItem(status) {
-    const value = addInput.value;
+    const value = addInput.value.trim();
+    if (value === '') return;
     const boardList = getBoardList(status);
     const boardListItemId = saveBoardListItemToLocalStorage(value, status);
     const boardListItem = createBoardListItem(boardListItemId, value, status);
