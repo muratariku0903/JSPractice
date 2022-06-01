@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+    mode: 'development',
     entry: { bundle: './src/scripts/app.ts' },
     output: {
         path: path.join(__dirname, 'assets/scripts'),

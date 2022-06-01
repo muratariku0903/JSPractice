@@ -6,8 +6,10 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "webpack --mode=development",
-        "start": "webpack serve --mode=development"
+        "build": "npx webpack",
+        "start": "npx webpack serve",
+        "watch": "npx webpack --watch",
+        "dev": "npx webpack-dev-server"
     },
     "author": "",
     "license": "ISC",
