@@ -2,7 +2,6 @@ const addInput = document.getElementById('add_input');
 const addBtn = document.getElementById('add_btn');
 const removeCompletedBtn = document.getElementById('delete_completed_btn');
 const boardLists = document.querySelectorAll('.board_list');
-const boardListItems = document.querySelectorAll('.board_list_item');
 const storageName = 'boardLists';
 const boardListStatuses = {
     untouched: 'untouched',
@@ -12,9 +11,9 @@ const boardListStatuses = {
 
 
 initializeLocalStorage(storageName);
-addBtn.addEventListener('click', addItem);
-removeCompletedBtn.addEventListener('click', () => removeList(boardListStatuses.completed));
-createBoardList(boardLists);
+addBtn.addEventListener('click', () => addBoardListItem(boardListStatuses.untouched));
+removeCompletedBtn.addEventListener('click', () => removeBoardListItemAll(boardListStatuses.completed));
+createBoardLists(boardLists);
 let draggingBoardListItem = null;
 
 
@@ -27,20 +26,19 @@ function initializeLocalStorage(storageName) {
     }
 }
 
-function addItem() {
+function addBoardListItem(status) {
     const value = addInput.value;
-    const boardListStatus = boardListStatuses.untouched;
-    const boardList = getBoardList(boardListStatus);
-    const boardListItemId = saveBoardListItemToLocalStorage(value, boardListStatus);
-    const boardListItem = createBoardListItem(boardListItemId, value, boardListStatus);
+    const boardList = getBoardList(status);
+    const boardListItemId = saveBoardListItemToLocalStorage(value, status);
+    const boardListItem = createBoardListItem(boardListItemId, value, status);
     boardList.appendChild(boardListItem);
     addInput.value = '';
 }
 
-function removeList(status) {
+function removeBoardListItemAll(status) {
     const boardList = getBoardList(status);
     boardList.textContent = '';
-    removeBoardListItemAll(status);
+    removeBoardListItemAllFromLocalStorage(status);
 }
 
 function getBoardList(status) {
@@ -50,19 +48,23 @@ function getBoardList(status) {
     }
 }
 
-function createBoardList(boardLists) {
+function createBoardLists(boardLists) {
     for (const boardList of boardLists) {
-        const boardListStatus = boardList.dataset.status;
-        boardList.addEventListener('dragover', dragOver);
-        boardList.addEventListener('dragenter', dragEnter);
-        boardList.addEventListener('dragleave', dragLeave);
-        boardList.addEventListener('drop', dragDrop);
-        const boardListFromLocalStorage = getBoardListFromLocalStorage(boardListStatus);
-        for (const id in boardListFromLocalStorage) {
-            const value = boardListFromLocalStorage[id];
-            const boardListItem = createBoardListItem(id, value, boardListStatus);
-            boardList.appendChild(boardListItem);
-        }
+        createBoardList(boardList);
+    }
+}
+
+function createBoardList(boardList) {
+    const status = boardList.dataset.status;
+    boardList.addEventListener('dragover', dragOver);
+    boardList.addEventListener('dragenter', dragEnter);
+    boardList.addEventListener('dragleave', dragLeave);
+    boardList.addEventListener('drop', dragDrop);
+    const boardListFromLocalStorage = getBoardListFromLocalStorage(status);
+    for (const id in boardListFromLocalStorage) {
+        const value = boardListFromLocalStorage[id];
+        const boardListItem = createBoardListItem(id, value, status);
+        boardList.appendChild(boardListItem);
     }
 }
 
@@ -98,15 +100,15 @@ function removeBoardListItemFromLocalStorage(id, status) {
     localStorage.setItem(storageName, JSON.stringify(boardLists));
 }
 
-function removeBoardListItemAll(status) {
+function removeBoardListItemAllFromLocalStorage(status) {
     const boardLists = getBoardListsFromLocalStorage();
     boardLists[status] = {};
     localStorage.setItem(storageName, JSON.stringify(boardLists));
 }
 
-function getBoardListFromLocalStorage(key) {
+function getBoardListFromLocalStorage(status) {
     const boardLists = getBoardListsFromLocalStorage();
-    return boardLists[key];
+    return boardLists[status];
 }
 
 function getBoardListsFromLocalStorage() {
@@ -141,10 +143,10 @@ function dragLeave() {
 function dragDrop(e) {
     e.preventDefault();
     this.className = 'board_list';
-    const boardStatus = this.dataset.status;
+    const status = this.dataset.status;
     removeBoardListItemFromLocalStorage(draggingBoardListItem.id, draggingBoardListItem.dataset.status);
-    draggingBoardListItem.dataset.status = boardStatus;
-    draggingBoardListItem.id = saveBoardListItemToLocalStorage(draggingBoardListItem.textContent, boardStatus);
+    draggingBoardListItem.dataset.status = status;
+    draggingBoardListItem.id = saveBoardListItemToLocalStorage(draggingBoardListItem.textContent, status);
     this.appendChild(draggingBoardListItem);
     draggingBoardListItem = null;
 }
