@@ -1,4 +1,5 @@
 class Score {
+    private score: number = 0;
     private outputEl: HTMLElement;
 
     constructor(outputEl: HTMLElement) {
@@ -6,7 +7,7 @@ class Score {
     }
 
     public count() {
-        this.outputEl.innerHTML += 1;
+        this.outputEl.innerHTML = String(++this.score);
     }
 }
 

@@ -1,6 +1,3 @@
-// 動位置を設定するのと描画はタイミングを統一させる
-// バラバラなタイミングでやると処理がわからなくなる
-
 class Paddle {
     private ctx: CanvasRenderingContext2D;
     private x: number = 600;

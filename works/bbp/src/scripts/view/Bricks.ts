@@ -46,6 +46,10 @@ class Bricks {
         return this.brickExists;
     }
 
+    public isEmptyBricks(): boolean {
+        return this.brickExists.every(arr => arr.every(val => !val));
+    }
+
     private createBrick(r: number, c: number): Brick {
         const brickX = this.brickGap + c * (this.brickGap + this.brickWidth);
         const brickY = this.brickGap + r * (this.brickGap + this.brickHeight);

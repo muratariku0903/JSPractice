@@ -12,9 +12,15 @@
     <body>
         <h1>ブロック崩し</h1>
         <canvas id="board" width="800" height="600"></canvas>
-        <button id="end_btn">終了</button>
+        <div class="btn_wrapper">
+            <button id="start_btn">スタート</button>
+            <button id="end_btn">止める</button>
+        </div>
         <div class="score_wapper">
             <p id="score" class="score">0</p>
+        </div>
+        <div class="dialog_wrapper">
+            <div id="dialog" class="dialog"></div>
         </div>
         <script src="./assets/scripts/bundle.js"></script>
     </body>

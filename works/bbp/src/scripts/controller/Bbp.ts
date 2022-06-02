@@ -3,11 +3,14 @@ import Board from '../view/Board';
 import Paddle from '../view/Paddle';
 import Bricks from '../view/Bricks';
 import Score from '../view/Score';
+import Dialog from '../view/Dialog';
 
 // 外部からの入力値を元にモデルとビューを制御する
 class BbpController {
     private cw: number;
     private ch: number;
+    private coLeft: number;
+    private isPlaying: boolean = false;
     private keyRightPressed: boolean = false;
     private keyLeftPressed: boolean = false;
     private board: Board;
@@ -15,28 +18,31 @@ class BbpController {
     private paddle: Paddle;
     private bricks: Bricks;
     private score: Score;
+    private dialog: Dialog;
     private timerId: NodeJS.Timer | null = null;
 
-    // これboardではなくて基準となる要素じゃない？
-    constructor(boardEl: HTMLCanvasElement, outputEl: HTMLElement) {
+    constructor(boardEl: HTMLCanvasElement, outputEl: HTMLElement, dialogEl: HTMLElement) {
         this.cw = boardEl.width;
         this.ch = boardEl.height;
+        this.coLeft = boardEl.offsetLeft;
         this.board = new Board(boardEl);
         this.paddle = new Paddle(boardEl);
         this.ball = new Ball(boardEl);
         this.bricks = new Bricks(boardEl);
         this.score = new Score(outputEl);
+        this.dialog = new Dialog(dialogEl);
+
+        this.draw();
     }
 
     public start() {
-        console.log('start');
+        this.isPlaying = true;
         this.timerId = setInterval(() => this.draw(), 10);
     }
 
     public end() {
-        console.log('end');
+        this.isPlaying = false;
         if (this.timerId) clearInterval(this.timerId);
-        console.log(this.bricks.getBrickExists());
         // document.location.reload();
     }
 
@@ -47,6 +53,10 @@ class BbpController {
         this.drawBall();
         this.drawPaddle();
         this.drawBricks();
+        if (this.isDestroyedAllBricks()) {
+            this.end();
+            this.dialog.openDialog('win');
+        }
     }
 
     public keyDownHandler(e: KeyboardEvent): void {
@@ -62,6 +72,15 @@ class BbpController {
             this.keyRightPressed = false
         } else if (e.key == 'Left' || e.key == 'ArrowLeft') {
             this.keyLeftPressed = false
+        }
+    }
+
+    public mouseMoveHandler(e: MouseEvent): void {
+        if (this.isPlaying && this.isCursorInCanvas(e)) {
+            const cursorXInCanvas = e.clientX - this.coLeft;
+            const paddleW = this.paddle.getW();
+            this.paddle.setX(cursorXInCanvas - paddleW / 2);
+            this.paddle.draw();
         }
     }
 
@@ -83,11 +102,13 @@ class BbpController {
                 this.ball.reverseDY();
             } else {
                 this.end();
+                this.dialog.openDialog('lose');
             }
         }
 
         if (this.isBallConflictBrick()) {
             this.ball.reverseDY();
+            this.scoreUp();
         }
 
         this.ball.draw();
@@ -108,8 +129,8 @@ class BbpController {
         this.bricks.draw();
     }
 
-    private drawScore(): void {
-        this.score.count()
+    private scoreUp(): void {
+        this.score.count();
     }
 
     private isBallConflictX(): boolean {
@@ -161,6 +182,16 @@ class BbpController {
 
     private isPaddingConflictLeft(): boolean {
         return this.paddle.getX() <= 0;
+    }
+
+    private isDestroyedAllBricks(): boolean {
+        return this.bricks.isEmptyBricks();
+    }
+
+    private isCursorInCanvas(e: MouseEvent): boolean {
+        const relativeX = e.clientX - this.coLeft;
+
+        return 0 < relativeX && relativeX < this.cw;
     }
 }
 
