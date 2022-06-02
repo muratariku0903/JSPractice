@@ -4,14 +4,15 @@
 class Paddle {
     private ctx: CanvasRenderingContext2D;
     private x: number = 600;
-    private dx: number = 50;
+    private dx: number = 5;
     private y: number = 0;
-    private w: number = 75;
+    private w: number = 100;
     private h: number = 10;
     private bgc: string = "black";
 
     constructor(board: HTMLCanvasElement) {
-        this.y = board.height;
+        this.x = board.width / 2
+        this.y = board.height - this.h;
         const ctx = board.getContext('2d');
         if (ctx) {
             this.ctx = ctx;
@@ -22,7 +23,7 @@ class Paddle {
 
     public draw() {
         this.ctx.beginPath();
-        this.ctx.rect(this.x, this.y - this.h, this.w, this.h);
+        this.ctx.rect(this.x, this.y, this.w, this.h);
         this.ctx.fillStyle = this.bgc;
         this.ctx.fill();
         this.ctx.closePath();

@@ -1,13 +1,15 @@
 class Ball {
     private ctx: CanvasRenderingContext2D;
     private x: number = 600;
-    private dx: number = 50;
+    private dx: number = 3;
     private y: number = 0;
-    private dy: number = 50;
+    private dy: number = 3;
     private r: number = 20;
     private bgc: string = "green";
 
     constructor(board: HTMLCanvasElement) {
+        this.x = board.width / 2;
+        this.y = board.height / 2;
         const ctx = board.getContext('2d');
         if (ctx) {
             this.ctx = ctx;
