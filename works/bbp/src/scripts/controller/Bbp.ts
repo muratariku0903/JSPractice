@@ -5,7 +5,6 @@ import Bricks from '../view/Bricks';
 import Score from '../view/Score';
 import Dialog from '../view/Dialog';
 
-// 外部からの入力値を元にモデルとビューを制御する
 class BbpController {
     private cw: number;
     private ch: number;
@@ -43,7 +42,6 @@ class BbpController {
     public end() {
         this.isPlaying = false;
         if (this.timerId) clearInterval(this.timerId);
-        // document.location.reload();
     }
 
     // ここでボールの衝突を検知しても良いかもしれない
